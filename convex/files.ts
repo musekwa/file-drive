@@ -1,16 +1,17 @@
 import { ConvexError, v } from "convex/values";
 import { MutationCtx, QueryCtx, mutation, query } from "./_generated/server";
 import { getUser } from "./users";
+import { Doc, Id } from "./_generated/dataModel";
 
-export const generateUploadUrl = mutation(async (ctx)=>{
+export const generateUploadUrl = mutation(async (ctx) => {
   const identity = await ctx.auth.getUserIdentity();
 
-  if(!identity){
+  if (!identity) {
     throw new ConvexError("not authenticated");
   }
 
   return await ctx.storage.generateUploadUrl();
-})
+});
 
 export async function hasAccessToOrg(
   ctx: QueryCtx | MutationCtx,
@@ -34,8 +35,7 @@ export async function hasAccessToOrg(
   }
 
   const hasAccess =
-    user.orgIds.includes(orgId) ||
-    user.tokenIdentifier.includes(orgId);
+    user.orgIds.includes(orgId) || user.tokenIdentifier.includes(orgId);
 
   if (!hasAccess) {
     return null;
@@ -62,13 +62,11 @@ export const createFile = mutation({
       name: args.name,
       orgId: args.orgId,
       fileId: args.fileId,
-    //   type: args.type,
-    //   userId: hasAccess.user._id,
+      //   type: args.type,
+      //   userId: hasAccess.user._id,
     });
   },
 });
-
-
 
 export const getFiles = query({
   args: {
@@ -85,3 +83,52 @@ export const getFiles = query({
       .collect();
   },
 });
+
+export const deleteFile = mutation({
+  args: { fileId: v.id("files") },
+  async handler(ctx, args) {
+
+    const access = await hasAccessToFile(ctx, args.fileId);
+
+    if (!access) {
+      throw new ConvexError("no access to file");
+    }
+
+    await ctx.db.delete(args.fileId);
+
+    // assertCanDeleteFile(access.user, access.file);
+
+    // await ctx.db.patch(args.fileId, {
+    //   shouldDelete: true,
+    // });
+  },
+});
+
+function assertCanDeleteFile(user: Doc<"users">, file: Doc<"files">) {
+  const canDelete = true;
+  // file.userId === user._id
+  // ||    user.orgIds.find((org) => org.orgId === file.orgId)?.role === "admin";
+
+  if (!canDelete) {
+    throw new ConvexError("you have no acces to delete this file");
+  }
+}
+
+async function hasAccessToFile(
+  ctx: QueryCtx | MutationCtx,
+  fileId: Id<"files">
+) {
+  const file = await ctx.db.get(fileId);
+
+  if (!file) {
+    return null;
+  }
+
+  const hasAccess = await hasAccessToOrg(ctx, file.orgId);
+
+  if (!hasAccess) {
+    return null;
+  }
+
+  return { user: hasAccess.user, file };
+}
