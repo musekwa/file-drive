@@ -8,7 +8,7 @@ import Image from "next/image";
 import { FileIcon, Loader2, StarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { UploadButton } from "../_components/upload-button";
 import { api } from "../../../../convex/_generated/api";
@@ -30,7 +30,13 @@ export function Placeholer() {
   );
 }
 
-export default function FileBrowser({ title, favorites }: { title: string, favorites?: boolean }) {
+export default function FileBrowser({
+  title,
+  favoritesOnly,
+}: {
+  title: string;
+  favoritesOnly?: boolean;
+}) {
   const organization = useOrganization();
   const user = useUser();
   const [query, setQuery] = useState("");
@@ -38,8 +44,14 @@ export default function FileBrowser({ title, favorites }: { title: string, favor
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
   }
-
-  const files = useQuery(api.files.getFiles, orgId ? { orgId, query, favorites } : "skip");
+  const favorites = useQuery(
+    api.files.getAllFavorites,
+    orgId ? { orgId } : "skip"
+  );
+  const files = useQuery(
+    api.files.getFiles,
+    orgId ? { orgId, query, favorites: favoritesOnly } : "skip"
+  );
   const isLoading = files === undefined && user.isSignedIn;
 
   return (
@@ -64,9 +76,13 @@ export default function FileBrowser({ title, favorites }: { title: string, favor
           {files && files.length === 0 && <Placeholer />}
 
           <div className="grid grid-cols-3 gap-4 my-4">
-            {files?.map((file) => {
-              return <FileCard key={file._id} file={file} />;
-            })}
+            {files?.map((file) => (
+              <FileCard
+                favorites={favorites ?? []}
+                key={file._id}
+                file={file}
+              />
+            ))}
           </div>
         </>
       )}

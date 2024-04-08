@@ -52,10 +52,12 @@ export const getFiles = query({
     favorites: v.optional(v.boolean()),
   },
   async handler(ctx, args) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      return [];
+    const access = await hasAccessToOrg(ctx, args.orgId);
+
+    if (!access) {
+      throw new ConvexError("you do not have access to this org");
     }
+
     let files = await ctx.db
       .query("files")
       .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
@@ -67,18 +69,20 @@ export const getFiles = query({
       );
     }
 
-    if(args.favorites){
-      const user = await ctx.db.query("users").withIndex("by_tokenIdentifier", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier)).first();
+    if (args.favorites) {
 
-      if (!user) {
-        throw new ConvexError("user not found");
-      }
-      
-      const favorites = await ctx.db.query("favorites").withIndex("by_userId_orgId_fileId", (q) => q.eq("userId", user._id).eq("orgId", args.orgId)).collect();
+      const favorites = await ctx.db
+        .query("favorites")
+        .withIndex("by_userId_orgId_fileId", (q) =>
+          q.eq("userId", access.user._id).eq("orgId", args.orgId)
+        )
+        .collect();
 
-      files = files.filter((file) => favorites.some((favorite) => favorite.fileId === file._id));
+      files = files.filter((file) =>
+        favorites.some((favorite) => favorite.fileId === file._id)
+      );
     }
-    
+
     return files;
   },
 });
@@ -147,11 +151,6 @@ async function hasAccessToFile(
   ctx: QueryCtx | MutationCtx,
   fileId: Id<"files">
 ) {
-  const identity = await ctx.auth.getUserIdentity();
-  if (!identity) {
-    return null;
-  }
-
   const file = await ctx.db.get(fileId);
 
   if (!file) {
@@ -190,7 +189,10 @@ export const toggleFavorite = mutation({
     const favorite = await ctx.db
       .query("favorites")
       .withIndex("by_userId_orgId_fileId", (q) =>
-        q.eq("userId", user._id).eq("orgId", access.file.orgId).eq("fileId", access.file._id)
+        q
+          .eq("userId", user._id)
+          .eq("orgId", access.file.orgId)
+          .eq("fileId", access.file._id)
       )
       .first();
 
@@ -206,3 +208,25 @@ export const toggleFavorite = mutation({
   },
 });
 
+export const getAllFavorites = query({
+  args: { orgId: v.string() },
+  async handler(ctx, args) {
+    const access = await hasAccessToOrg(ctx, args.orgId);
+
+    if (!access) {
+      throw [];
+    }
+
+    const favorites = await ctx.db
+      .query("favorites")
+      .withIndex("by_userId_orgId_fileId", (q) =>
+        q
+          .eq("userId", access.user._id)
+          .eq("orgId", args.orgId)
+         
+      )
+      .collect();
+
+    return favorites;
+  },
+});
