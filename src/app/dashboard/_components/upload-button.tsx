@@ -28,7 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
+import { Loader2, UploadCloud, UploadIcon } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
 
 const formSchema = z.object({
@@ -119,7 +119,9 @@ export function UploadButton() {
       }}
     >
       <DialogTrigger asChild>
-        <Button className="bg-sky-600/90 dark:text-white">Upload File</Button>
+        <Button className="flex gap-2 bg-sky-600/90 dark:text-white">
+          <UploadCloud className="h-6 w-6" />
+          Upload File</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

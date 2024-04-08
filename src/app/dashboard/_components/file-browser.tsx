@@ -5,7 +5,14 @@ import { useQuery } from "convex/react";
 import { z } from "zod";
 
 import Image from "next/image";
-import { FileIcon, Loader2, StarIcon } from "lucide-react";
+import {
+  FileIcon,
+  GridIcon,
+  Loader2,
+  Rows3Icon,
+  StarIcon,
+  TableIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { use, useState } from "react";
@@ -14,6 +21,9 @@ import { UploadButton } from "../_components/upload-button";
 import { api } from "../../../../convex/_generated/api";
 import SearchBar from "../_components/search-bar";
 import FileCard from "../_components/file-card";
+import { DataTable } from "./file-table";
+import { columns } from "./columns";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export function Placeholer() {
   return (
@@ -33,7 +43,7 @@ export function Placeholer() {
 export default function FileBrowser({
   title,
   favoritesOnly,
-  deleteOnly
+  deleteOnly,
 }: {
   title: string;
   favoritesOnly?: boolean;
@@ -56,38 +66,57 @@ export default function FileBrowser({
   );
   const isLoading = files === undefined && user.isSignedIn;
 
+  const modifiedFiles = files?.map((file) => ({
+    ...file,
+    isFavorited: (favorites ?? []).some(
+      (favorite) => favorite.fileId === file._id
+    ),
+  }));
+
   return (
     <div>
-      {isLoading && (
-        <div className="flex flex-col h-screen items-center justify-center">
-          <Loader2 className="mx-auto h-24 w-24 animate-spin" />
-          <div className="text-xl text-center text-gray-500">Loading...</div>
-        </div>
+      <div className="flex justify-between items-center border shadow-md py-4 px-2">
+        <h1 className="text-2xl font-bold text-gray-600">{title}</h1>
+
+        <SearchBar query={query} setQuery={setQuery} />
+
+        <UploadButton />
+      </div>
+      {files && files.length === 0 ? (
+        <Placeholer />
+      ) : (
+        <Tabs defaultValue="grid">
+          <TabsList className="mb-4">
+            <TabsTrigger value="grid" className="flex gap-2 items-center">
+              <GridIcon className="w-6 h-6" />
+              Grid
+            </TabsTrigger>
+            <TabsTrigger value="table" className="flex gap-2 items-center">
+              <Rows3Icon className="w-6 h-6" />
+              Table
+            </TabsTrigger>
+          </TabsList>
+          {isLoading && (
+            <div className="flex flex-col h-[300px] items-center justify-center">
+              <Loader2 className="mx-auto h-24 w-24 animate-spin" />
+              <div className="text-xl text-center text-gray-500">
+                Loading...
+              </div>
+            </div>
+          )}
+          <TabsContent value="grid">
+            <div className="grid grid-cols-3 gap-4 my-4">
+              {modifiedFiles?.map((file) => (
+                <FileCard key={file._id} file={file} />
+              ))}
+            </div>
+          </TabsContent>
+          <TabsContent value="table">
+            <DataTable columns={columns} data={modifiedFiles ?? []} />
+          </TabsContent>
+        </Tabs>
       )}
 
-      {!isLoading && (
-        <>
-          <div className="flex justify-between items-center border shadow-md py-4 px-2">
-            <h1 className="text-2xl font-bold text-gray-600">{title}</h1>
-
-            <SearchBar query={query} setQuery={setQuery} />
-
-            <UploadButton />
-          </div>
-
-          {files && files.length === 0 && <Placeholer />}
-
-          <div className="grid grid-cols-3 gap-4 my-4">
-            {files?.map((file) => (
-              <FileCard
-                favorites={favorites ?? []}
-                key={file._id}
-                file={file}
-              />
-            ))}
-          </div>
-        </>
-      )}
       {!user.isSignedIn && (
         <div className="flex flex-col h-full items-center justify-center gap-4">
           <Image
