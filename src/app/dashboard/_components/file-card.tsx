@@ -44,6 +44,7 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
+import { Protect } from "@clerk/nextjs";
 
 const FileCardAction = ({
   file,
@@ -101,26 +102,29 @@ const FileCardAction = ({
                 fileId: file._id,
               });
             }}
-           
           >
             {isFavorited ? (
-              <div  className="flex gap-1  items-center cursor-pointer">
+              <div className="flex gap-1  items-center cursor-pointer">
                 <StarHalf className="h-4 w-4 text-yellow-500" /> Unfavorite
               </div>
             ) : (
-              <div  className="flex gap-1  items-center cursor-pointer">
+              <div className="flex gap-1  items-center cursor-pointer">
                 <StarIcon className="h-4 w-4" /> Favorite
               </div>
             )}
-            
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => setIsConfirmOpen(true)}
-            className="flex gap-1 text-red-600 items-center cursor-pointer"
+          <Protect
+            role="org:admin"
+            fallback={<></>}
           >
-            <Trash className="h-4 w-4" /> Delete
-          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => setIsConfirmOpen(true)}
+              className="flex gap-1 text-red-600 items-center cursor-pointer"
+            >
+              <Trash className="h-4 w-4" /> Delete
+            </DropdownMenuItem>
+          </Protect>
         </DropdownMenuContent>
       </DropdownMenu>
     </>

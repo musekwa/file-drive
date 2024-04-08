@@ -96,6 +96,12 @@ export const deleteFile = mutation({
       throw new ConvexError("no access to file");
     }
 
+    // assertCanDeleteFile(access.user, access.file);
+    const isAdmin = access.user.orgIds.find((org) => org.orgId === access.file.orgId)?.role === "admin";
+    if (!isAdmin) {
+      throw new ConvexError("you have no acces to delete this file");
+    }
+
     await ctx.db.delete(args.fileId);
 
     // assertCanDeleteFile(access.user, access.file);
@@ -138,7 +144,7 @@ export async function hasAccessToOrg(
   }
 
   const hasAccess =
-    user.orgIds.includes(orgId) || user.tokenIdentifier.includes(orgId);
+    user.orgIds.some(item => item.orgId === orgId) || user.tokenIdentifier.includes(orgId);
 
   if (!hasAccess) {
     return null;
