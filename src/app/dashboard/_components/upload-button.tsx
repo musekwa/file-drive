@@ -119,7 +119,7 @@ export function UploadButton() {
       }}
     >
       <DialogTrigger asChild>
-        <Button>Upload File</Button>
+        <Button className="bg-sky-600/90 dark:text-white">Upload File</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

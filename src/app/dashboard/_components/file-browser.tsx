@@ -33,9 +33,11 @@ export function Placeholer() {
 export default function FileBrowser({
   title,
   favoritesOnly,
+  deleteOnly
 }: {
   title: string;
   favoritesOnly?: boolean;
+  deleteOnly?: boolean;
 }) {
   const organization = useOrganization();
   const user = useUser();
@@ -50,7 +52,7 @@ export default function FileBrowser({
   );
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites: favoritesOnly } : "skip"
+    orgId ? { orgId, query, favorites: favoritesOnly, deleteOnly } : "skip"
   );
   const isLoading = files === undefined && user.isSignedIn;
 
@@ -65,8 +67,8 @@ export default function FileBrowser({
 
       {!isLoading && (
         <>
-          <div className="flex justify-between items-center">
-            <h1 className="text-4xl font-bold">{title}</h1>
+          <div className="flex justify-between items-center border shadow-md py-4 px-2">
+            <h1 className="text-2xl font-bold text-gray-600">{title}</h1>
 
             <SearchBar query={query} setQuery={setQuery} />
 

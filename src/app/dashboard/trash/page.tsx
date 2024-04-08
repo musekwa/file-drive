@@ -1,8 +1,14 @@
 import React from 'react'
+import FileBrowser from '../_components/file-browser'
 
 const TrashPage = () => {
   return (
-    <div>TrashPage</div>
+    <div>
+      <FileBrowser 
+        title="Trash"
+        deleteOnly
+      />
+    </div>
   )
 }
 

@@ -31,6 +31,8 @@ import { Doc, Id } from "../../../../convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import {
   DeleteIcon,
+  Download,
+  FileIcon,
   FileText,
   GanttChartIcon,
   ImageIcon,
@@ -39,7 +41,12 @@ import {
   StarIcon,
   TextIcon,
   Trash,
+  UndoIcon,
+  UserIcon,
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { format, formatDistance, formatRelative, subDays } from "date-fns";
+
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useToast } from "@/components/ui/use-toast";
@@ -49,13 +56,17 @@ import { Protect } from "@clerk/nextjs";
 const FileCardAction = ({
   file,
   isFavorited,
+  fileUrl,
 }: {
   file: Doc<"files">;
   isFavorited: boolean;
+  fileUrl: string;
 }) => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const toggleFavorite = useMutation(api.files.toggleFavorite);
+  const restoreFile = useMutation(api.files.restoreFile);
   const deleteFile = useMutation(api.files.deleteFile);
+
   const { toast } = useToast();
 
   return (
@@ -66,8 +77,8 @@ const FileCardAction = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
+              This action will mark your file for our deletion process. Files
+              are deleted periodically.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -80,8 +91,8 @@ const FileCardAction = ({
                 setIsConfirmOpen(false);
                 toast({
                   variant: "success",
-                  title: "File Deleted",
-                  description: "You have deleted a file",
+                  title: "File marked for deletion",
+                  description: "Your file will be deleted soon",
                 });
               }}
             >
@@ -96,6 +107,15 @@ const FileCardAction = ({
           <MoreVertical />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <DropdownMenuItem
+            className="flex gap-1  items-center cursor-pointer"
+            onClick={() => {
+              window.open(fileUrl as string, "_blank");
+            }}
+          >
+            <Download className="h-4 w-4 " /> Download
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem
             onClick={() => {
               toggleFavorite({
@@ -113,16 +133,29 @@ const FileCardAction = ({
               </div>
             )}
           </DropdownMenuItem>
-          <Protect
-            role="org:admin"
-            fallback={<></>}
-          >
-          <DropdownMenuSeparator />
+          <Protect role="org:admin" fallback={<></>}>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => setIsConfirmOpen(true)}
-              className="flex gap-1 text-red-600 items-center cursor-pointer"
+              onClick={() => {
+                if (file.shouldDelete) {
+                  restoreFile({
+                    fileId: file._id,
+                  });
+                } else {
+                  setIsConfirmOpen(true);
+                }
+              }}
+              className="flex gap-1  items-center cursor-pointer"
             >
-              <Trash className="h-4 w-4" /> Delete
+              {file.shouldDelete ? (
+                <div className="flex gap-1 text-green-600  items-center">
+                  <UndoIcon className="h-4 w-4" /> Restore
+                </div>
+              ) : (
+                <div className="flex gap-1 text-red-600 items-center">
+                  <Trash className="h-4 w-4" /> Delete
+                </div>
+              )}
             </DropdownMenuItem>
           </Protect>
         </DropdownMenuContent>
@@ -139,13 +172,16 @@ const FileCard = ({
   favorites: Doc<"favorites">[];
 }) => {
   const typeIcons = {
-    image: <ImageIcon />,
-    pdf: <FileText />,
-    csv: <GanttChartIcon />,
+    image: <ImageIcon className="h-4 w-4" />,
+    pdf: <FileText className="h-4 w-4" />,
+    csv: <GanttChartIcon className="h-4 w-4" />,
   } as Record<Doc<"files">["type"], ReactNode>;
 
   const fileUrl = useQuery(api.files.getFileUrl, {
     fileId: file.fileId,
+  });
+  const userProfile = useQuery(api.users.getUserProfile, {
+    userId: file.userId,
   });
 
   function getFileUrl(fileId: Id<"_storage">): string {
@@ -157,16 +193,20 @@ const FileCard = ({
   );
 
   return (
-    <Card className="relative">
-      <CardHeader>
-        <CardTitle className="flex gap-2">
+    <Card className="relative hover:scale-105 transition-all duration-300">
+      <CardHeader className="pt-1">
+        <CardTitle className="flex gap-2 text-base font-normal items-center">
           {typeIcons[file.type]} {file.name}{" "}
           {isFavorited && (
             <StarIcon fill="yellow" className="h-4 w-4  text-yellow-500" />
           )}
         </CardTitle>
-        <div className="absolute right-2 top-2">
-          <FileCardAction isFavorited={isFavorited} file={file} />
+        <div className="absolute right-2 top-0">
+          <FileCardAction
+            fileUrl={fileUrl as string}
+            isFavorited={isFavorited}
+            file={file}
+          />
         </div>
       </CardHeader>
       <CardContent className="flex justify-center items-center h-[200px]">
@@ -181,14 +221,17 @@ const FileCard = ({
         {file.type === "pdf" && <FileText className="h-24 w-24" />}
         {file.type === "csv" && <GanttChartIcon className="h-24 w-24" />}
       </CardContent>
-      <CardFooter className="flex justify-center">
-        <Button
-          onClick={() => {
-            window.open(fileUrl as string, "_blank");
-          }}
-        >
-          Download
-        </Button>
+      <CardFooter className="flex justify-between gap-2 items-end text-[10px] text-gray-600 bg-gray-100 pt-1 pb-1">
+        <div className="flex gap-2 items-end">
+          <Avatar className="w-6 h-6 ">
+            <AvatarImage src={userProfile?.image} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          {userProfile?.name}
+        </div>
+        <div>
+          Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
+        </div>
       </CardFooter>
     </Card>
   );
