@@ -120,14 +120,14 @@ export default function FileBrowser({
             </div>
           </div>
 
-          {isLoading && (
+          {/* {isLoading && (
             <div className="flex flex-col items-center justify-center">
               <Loader2 className="mx-auto h-24 w-24 animate-spin" />
               <div className="text-xl text-center text-gray-500">
                 Loading...
               </div>
             </div>
-          )}
+          )} */}
           <TabsContent value="grid">
             {/* <div className="grid grid-cols-3 gap-4 my-4">
               {modifiedFiles?.map((file) => (
