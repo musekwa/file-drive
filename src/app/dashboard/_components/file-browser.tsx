@@ -81,7 +81,9 @@ export default function FileBrowser({
 
         <UploadButton />
       </div>
-      {files && files.length === 0 ? (
+      <Placeholder />
+
+      {/* {files && files.length === 0 ? (
         <Placeholder />
       ) : (
         <Tabs defaultValue="grid">
@@ -120,26 +122,26 @@ export default function FileBrowser({
             </div>
           </div>
 
-          {/* {isLoading && (
+          {isLoading && (
             <div className="flex flex-col items-center justify-center">
               <Loader2 className="mx-auto h-24 w-24 animate-spin" />
               <div className="text-xl text-center text-gray-500">
                 Loading...
               </div>
             </div>
-          )} */}
+          )}
           <TabsContent value="grid">
-            {/* <div className="grid grid-cols-3 gap-4 my-4">
+            <div className="grid grid-cols-3 gap-4 my-4">
               {modifiedFiles?.map((file) => (
                 <FileCard key={file._id} file={file} />
               ))}
-            </div> */}
+            </div>
           </TabsContent>
           <TabsContent value="table">
-            {/* <DataTable columns={columns} data={modifiedFiles ?? []} /> */}
+            <DataTable columns={columns} data={modifiedFiles ?? []} />
           </TabsContent>
         </Tabs>
-      )}
+      )} */}
 
       {!user.isSignedIn && (
         <div className="flex flex-col h-full items-center justify-center gap-4">
