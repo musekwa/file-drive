@@ -2,21 +2,15 @@
 import { SignInButton, useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 
-import { z } from "zod";
-
 import Image from "next/image";
 import {
-  FileIcon,
   GridIcon,
   Loader2,
   Rows3Icon,
-  StarIcon,
-  TableIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-import { use, useState } from "react";
-import Link from "next/link";
+import { useState } from "react";
 import { UploadButton } from "../_components/upload-button";
 import { api } from "../../../../convex/_generated/api";
 import SearchBar from "../_components/search-bar";
@@ -33,21 +27,8 @@ import {
 } from "@/components/ui/select";
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { Label } from "@/components/ui/label";
+import Placeholder from "./placeholder";
 
-export function Placeholer() {
-  return (
-    <div className="flex flex-col gap-8 justify-center items-center mt-24">
-      <Image
-        alt="Empty folder picture"
-        src="/empty.svg"
-        width={300}
-        height={300}
-      />
-      <div className="text-2xl">You have no files, upload one now!</div>
-      <UploadButton />
-    </div>
-  );
-}
 
 export default function FileBrowser({
   title,
@@ -101,7 +82,7 @@ export default function FileBrowser({
         <UploadButton />
       </div>
       {files && files.length === 0 ? (
-        <Placeholer />
+        <Placeholder />
       ) : (
         <Tabs defaultValue="grid">
           <div className="flex justify-between items-center">

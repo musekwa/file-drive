@@ -1,8 +1,7 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -10,7 +9,6 @@ import {
 
 
 import { Doc, Id } from "../../../../convex/_generated/dataModel";
-import { Button } from "@/components/ui/button";
 import {
   FileText,
   GanttChartIcon,
@@ -18,15 +16,12 @@ import {
   StarIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format, formatDistance, formatRelative, subDays } from "date-fns";
+import {  formatRelative, } from "date-fns";
 
-import { useMutation, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
-import { Protect } from "@clerk/nextjs";
 import FileAction from "./file-actions";
-
 
 
 const FileCard = ({
@@ -52,8 +47,6 @@ const FileCard = ({
   function getFileUrl(fileId: Id<"_storage">): string {
     return `${process.env.NEXT_PUBLIC_CONVEX_URL}/api/storage/${fileId}`;
   }
-
-
 
   return (
     <Card className="relative hover:scale-105 transition-all duration-300">
