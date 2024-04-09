@@ -52,6 +52,7 @@ const FileAction = ({
   const toggleFavorite = useMutation(api.files.toggleFavorite);
   const restoreFile = useMutation(api.files.restoreFile);
   const deleteFile = useMutation(api.files.deleteFile);
+  const me = useQuery(api.users.getMe);
 
   const { toast } = useToast();
 
@@ -119,7 +120,13 @@ const FileAction = ({
               </div>
             )}
           </DropdownMenuItem>
-          <Protect role="org:admin" fallback={<></>}>
+          <Protect 
+            condition={(check)=>{
+              return check({ 
+                role: "org:admin",
+               }) || file.userId === me?._id
+            }}
+          fallback={<></>}>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
