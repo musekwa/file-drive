@@ -42,30 +42,30 @@ export default function FileBrowser({
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
   }
-  // const favorites = useQuery(
-  //   api.files.getAllFavorites,
-  //   orgId ? { orgId } : "skip"
-  // );
-  // const files = useQuery(
-  //   api.files.getFiles,
-  //   orgId
-  //     ? {
-  //         orgId,
-  //         query,
-  //         favorites: favoritesOnly,
-  //         deleteOnly,
-  //         type: type === "all" ? undefined : type,
-  //       }
-  //     : "skip"
-  // );
-  // const isLoading = files === undefined && user.isSignedIn;
+  const favorites = useQuery(
+    api.files.getAllFavorites,
+    orgId ? { orgId } : "skip"
+  );
+  const files = useQuery(
+    api.files.getFiles,
+    orgId
+      ? {
+          orgId,
+          query,
+          favorites: favoritesOnly,
+          deleteOnly,
+          type: type === "all" ? undefined : type,
+        }
+      : "skip"
+  );
+  const isLoading = files === undefined && user.isSignedIn;
 
-  // const modifiedFiles = files?.map((file) => ({
-  //   ...file,
-  //   isFavorited: (favorites ?? []).some(
-  //     (favorite) => favorite.fileId === file._id
-  //   ),
-  // }));
+  const modifiedFiles = files?.map((file) => ({
+    ...file,
+    isFavorited: (favorites ?? []).some(
+      (favorite) => favorite.fileId === file._id
+    ),
+  }));
 
   return (
     <div>
@@ -78,7 +78,7 @@ export default function FileBrowser({
       </div>
       <Placeholder />
 
-      {/* {files && files.length === 0 ? (
+      {files && files.length === 0 ? (
         <Placeholder />
       ) : (
         <Tabs defaultValue="grid">
@@ -127,14 +127,14 @@ export default function FileBrowser({
           )}
           <TabsContent value="grid">
             <div className="grid grid-cols-3 gap-4 my-4">
-              {files?.map((file) => <FileCard key={file._id} file={file} />)}
+              {modifiedFiles?.map((file) => <FileCard key={file._id} file={file} />)}
             </div>
           </TabsContent>
           <TabsContent value="table">
-            <DataTable columns={columns} data={files ?? []} />
+            <DataTable columns={columns} data={modifiedFiles ?? []} />
           </TabsContent>
         </Tabs>
-      )} */}
+      )}
 
 
       {!user.isSignedIn && (
