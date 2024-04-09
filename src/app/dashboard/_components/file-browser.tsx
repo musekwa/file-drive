@@ -129,11 +129,11 @@ export default function FileBrowser({
             </div>
           )}
           <TabsContent value="grid">
-            <div className="grid grid-cols-3 gap-4 my-4">
+            {/* <div className="grid grid-cols-3 gap-4 my-4">
               {modifiedFiles?.map((file) => (
                 <FileCard key={file._id} file={file} />
               ))}
-            </div>
+            </div> */}
           </TabsContent>
           <TabsContent value="table">
             {/* <DataTable columns={columns} data={modifiedFiles ?? []} /> */}
