@@ -42,10 +42,10 @@ export default function FileBrowser({
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
   }
-  const favorites = useQuery(
-    api.files.getAllFavorites,
-    orgId ? { orgId } : "skip"
-  );
+  // const favorites = useQuery(
+  //   api.files.getAllFavorites,
+  //   orgId ? { orgId } : "skip"
+  // );
   const files = useQuery(
     api.files.getFiles,
     orgId
@@ -62,9 +62,11 @@ export default function FileBrowser({
 
   const modifiedFiles = files?.map((file) => ({
     ...file,
-    isFavorited: (favorites ?? []).some(
-      (favorite) => favorite.fileId === file._id
-    ),
+    isFavorited: true,
+
+    // isFavorited: (favorites ?? []).some(
+      // (favorite) => favorite.fileId === file._id
+    // ),
   }));
 
   return (
