@@ -81,7 +81,6 @@ export function UploadButton() {
         fileId: storageId,
         orgId,
         type: types[fileType],
-        isFavorited: false,
       });
 
       form.reset();

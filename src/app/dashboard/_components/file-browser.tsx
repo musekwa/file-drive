@@ -42,10 +42,10 @@ export default function FileBrowser({
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
   }
-  // const favorites = useQuery(
-  //   api.files.getAllFavorites,
-  //   orgId ? { orgId } : "skip"
-  // );
+  const favorites = useQuery(
+    api.files.getAllFavorites,
+    orgId ? { orgId } : "skip"
+  );
   const files = useQuery(
     api.files.getFiles,
     orgId
@@ -60,12 +60,10 @@ export default function FileBrowser({
   );
   const isLoading = files === undefined && user.isSignedIn;
 
-  // const modifiedFiles = files?.map((file) => ({
-  //   ...file,
-  //   isFavorited: (favorites ?? []).some(
-  //     (favorite) => favorite.fileId === file._id
-  //   ),
-  // }));
+  const modifiedFiles = files?.map((file) => ({
+    ...file,
+    isFavorited: (favorites ?? []).some((favorite) => favorite.fileId === file._id),
+  }));
 
   return (
     <div>
@@ -124,24 +122,24 @@ export default function FileBrowser({
           </div>
         )}
         <TabsContent value="grid">
-          {files && files.length > 0 && (
+          {modifiedFiles && modifiedFiles.length > 0 && (
             <div className="grid grid-cols-3 gap-4 my-4">
-              {files?.map((file) => (
+              {modifiedFiles?.map((file) => (
                 <FileCard key={file._id} file={file} />
               ))}
             </div>
           )}
-          {files && files.length === 0 && (
+          {modifiedFiles && modifiedFiles.length === 0 && (
             <div className="flex flex-col items-center justify-center">
               <Placeholder />
             </div>
           )}
         </TabsContent>
         <TabsContent value="table">
-          {files && files.length > 0 && (
-            <DataTable columns={columns} data={files ?? []} />
+          {modifiedFiles && modifiedFiles.length > 0 && (
+            <DataTable columns={columns} data={modifiedFiles ?? []} />
           )}
-          {files && files.length === 0 && (
+          {modifiedFiles && modifiedFiles.length === 0 && (
             <div className="flex flex-col items-center justify-center">
               <Placeholder />
             </div>

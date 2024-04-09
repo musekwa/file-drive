@@ -11,7 +11,6 @@ export default defineSchema({
      shouldDelete: v.optional(v.boolean()),
      type: fileTypes, 
      userId: v.id("users"),
-     isFavorited: v.boolean(),
      orgId: v.string() }).index(
     "by_orgId",
     ["orgId"]

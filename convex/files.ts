@@ -33,7 +33,6 @@ export const createFile = mutation({
     fileId: v.id("_storage"),
     orgId: v.string(),
     type: fileTypes,
-    isFavorited: v.boolean(),
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
@@ -48,7 +47,6 @@ export const createFile = mutation({
       fileId: args.fileId,
       type: args.type,
       userId: hasAccess.user._id,
-      isFavorited: false,
     });
   },
 });
@@ -70,10 +68,11 @@ export const getFiles = query({
 
     let files = await ctx.db
       .query("files")
-      .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
+      // .withIndex("by_orgId", (q) => q.eq("orgId", args.orgId))
       .collect();
 
     const query = args.query;
+
     if (query) {
       files = files.filter((file) =>
         file.name.toLocaleLowerCase().includes(query.toLocaleLowerCase())
@@ -83,9 +82,9 @@ export const getFiles = query({
     if (args.favorites) {
       const favorites = await ctx.db
         .query("favorites")
-        .withIndex("by_userId_orgId_fileId", (q) =>
-          q.eq("userId", access.user._id).eq("orgId", args.orgId)
-        )
+        // .withIndex("by_userId_orgId_fileId", (q) =>
+        //   q.eq("userId", access.user._id).eq("orgId", args.orgId)
+        // )
         .collect();
 
       files = files.filter((file) =>
@@ -278,9 +277,9 @@ export const getAllFavorites = query({
 
     const favorites = await ctx.db
       .query("favorites")
-      .withIndex("by_userId_orgId_fileId", (q) =>
-        q.eq("userId", access.user._id).eq("orgId", args.orgId)
-      )
+      // .withIndex("by_userId_orgId_fileId", (q) =>
+      //   q.eq("userId", access.user._id).eq("orgId", args.orgId)
+      // )
       .collect();
 
     return favorites;
