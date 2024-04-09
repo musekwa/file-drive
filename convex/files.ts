@@ -33,6 +33,7 @@ export const createFile = mutation({
     fileId: v.id("_storage"),
     orgId: v.string(),
     type: fileTypes,
+    isFavorited: v.boolean(),
   },
   async handler(ctx, args) {
     const hasAccess = await hasAccessToOrg(ctx, args.orgId);
@@ -47,6 +48,7 @@ export const createFile = mutation({
       fileId: args.fileId,
       type: args.type,
       userId: hasAccess.user._id,
+      isFavorited: false,
     });
   },
 });
@@ -100,8 +102,6 @@ export const getFiles = query({
     if (args.type) {
       files = files.filter((file) => file.type === args.type);
     }
-
-    console.log("files", files);
 
     return files;
   },
