@@ -76,7 +76,7 @@ export default function FileBrowser({
 
         <UploadButton />
       </div>
-      <Placeholder />
+      {/* <Placeholder /> */}
 
       {files && files.length === 0 ? (
         <Placeholder />
