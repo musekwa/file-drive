@@ -126,7 +126,7 @@ export default function FileBrowser({
           </div>
 
           {isLoading && (
-            <div className="flex flex-col h-[300px] items-center justify-center">
+            <div className="flex flex-col items-center justify-center">
               <Loader2 className="mx-auto h-24 w-24 animate-spin" />
               <div className="text-xl text-center text-gray-500">
                 Loading...

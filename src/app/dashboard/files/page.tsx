@@ -44,7 +44,7 @@ export default function FilesPage() {
   const isLoading = files === undefined && user.isSignedIn;
 
   return (
-    <div>
+    <div className="min-h-screen">
       <FileBrowser title="All Files" />
     </div>
   );

@@ -6,7 +6,7 @@ import { useQuery } from "convex/react";
 const FavoritesPage = () => {
 
   return (
-    <div>
+    <div className="min-h-screen">
       <FileBrowser title="Favorites" favoritesOnly />
     </div>
   );
