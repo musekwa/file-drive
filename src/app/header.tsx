@@ -19,7 +19,7 @@ import { api } from "../../convex/_generated/api";
 const Header = () => {
 
   return (
-    <div className="sticky top-0 z-50 border-b py-4 light:bg-gray-50 dark:bg-slate-900">
+    <div className="sticky top-0 z-50 border-b py-4 bg-gray-100 dark:bg-slate-900">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex gap-8 items-center">
           <Link href={"/"}>

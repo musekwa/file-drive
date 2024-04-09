@@ -72,7 +72,15 @@ export default function FileBrowser({
   );
   const files = useQuery(
     api.files.getFiles,
-    orgId ? { orgId, query, favorites: favoritesOnly, deleteOnly, type: (type === 'all' ? undefined : type) } : "skip"
+    orgId
+      ? {
+          orgId,
+          query,
+          favorites: favoritesOnly,
+          deleteOnly,
+          type: type === "all" ? undefined : type,
+        }
+      : "skip"
   );
   const isLoading = files === undefined && user.isSignedIn;
 
@@ -111,12 +119,18 @@ export default function FileBrowser({
             </div>
             <div className="flex gap-2 items-center">
               <Label htmlFor="type-select">Type Filter</Label>
-              <Select value={type} onValueChange={setType} name="type-select" >
-                <SelectTrigger className="w-[180px]" defaultValue="all"  >
-                  <SelectValue  />
+              <Select
+                value={type}
+                onValueChange={(newvalue: any) => {
+                  setType(newvalue);
+                }}
+                name="type-select"
+              >
+                <SelectTrigger className="w-[180px]" defaultValue="all">
+                  <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="all">All</SelectItem>
                   <SelectItem value="image">Image</SelectItem>
                   <SelectItem value="csv">CSV</SelectItem>
                   <SelectItem value="pdf">PDF</SelectItem>
