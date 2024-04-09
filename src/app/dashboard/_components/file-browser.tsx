@@ -78,64 +78,77 @@ export default function FileBrowser({
       </div>
       {/* <Placeholder /> */}
 
-      {files && files.length === 0 ? (
+      {/* {files && files.length === 0 ? (
         <Placeholder />
-      ) : (
-        <Tabs defaultValue="grid">
-          <div className="flex justify-between items-center">
-            <div>
-              <TabsList className="mb-4">
-                <TabsTrigger value="grid" className="flex gap-2 items-center">
-                  <GridIcon className="w-6 h-6" />
-                  Grid
-                </TabsTrigger>
-                <TabsTrigger value="table" className="flex gap-2 items-center">
-                  <Rows3Icon className="w-6 h-6" />
-                  Table
-                </TabsTrigger>
-              </TabsList>
-            </div>
-            <div className="flex gap-2 items-center">
-              <Label htmlFor="type-select">Type Filter</Label>
-              <Select
-                value={type}
-                onValueChange={(newvalue: any) => {
-                  setType(newvalue);
-                }}
-                name="type-select"
-              >
-                <SelectTrigger className="w-[180px]" defaultValue="all">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="image">Image</SelectItem>
-                  <SelectItem value="csv">CSV</SelectItem>
-                  <SelectItem value="pdf">PDF</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+      ) : ( */}
+      <Tabs defaultValue="grid">
+        <div className="flex justify-between items-center">
+          <div>
+            <TabsList className="mb-4">
+              <TabsTrigger value="grid" className="flex gap-2 items-center">
+                <GridIcon className="w-6 h-6" />
+                Grid
+              </TabsTrigger>
+              <TabsTrigger value="table" className="flex gap-2 items-center">
+                <Rows3Icon className="w-6 h-6" />
+                Table
+              </TabsTrigger>
+            </TabsList>
           </div>
+          <div className="flex gap-2 items-center">
+            <Label htmlFor="type-select">Type Filter</Label>
+            <Select
+              value={type}
+              onValueChange={(newvalue: any) => {
+                setType(newvalue);
+              }}
+              name="type-select"
+            >
+              <SelectTrigger className="w-[180px]" defaultValue="all">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="image">Image</SelectItem>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-          {isLoading && (
-            <div className="flex flex-col items-center justify-center">
-              <Loader2 className="mx-auto h-24 w-24 animate-spin" />
-              <div className="text-xl text-center text-gray-500">
-                Loading...
-              </div>
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center">
+            <Loader2 className="mx-auto h-24 w-24 animate-spin" />
+            <div className="text-xl text-center text-gray-500">Loading...</div>
+          </div>
+        )}
+        <TabsContent value="grid">
+          {modifiedFiles && modifiedFiles.length > 0 && (
+            <div className="grid grid-cols-3 gap-4 my-4">
+              {modifiedFiles?.map((file) => (
+                <FileCard key={file._id} file={file} />
+              ))}
             </div>
           )}
-          <TabsContent value="grid">
-            <div className="grid grid-cols-3 gap-4 my-4">
-              {modifiedFiles?.map((file) => <FileCard key={file._id} file={file} />)}
+          {modifiedFiles && modifiedFiles.length === 0 && (
+            <div className="flex flex-col items-center justify-center">
+              <Placeholder />
             </div>
-          </TabsContent>
-          <TabsContent value="table">
+          )}
+        </TabsContent>
+        <TabsContent value="table">
+          {modifiedFiles && modifiedFiles.length > 0 && (
             <DataTable columns={columns} data={modifiedFiles ?? []} />
-          </TabsContent>
-        </Tabs>
-      )}
-
+          )}
+          {modifiedFiles && modifiedFiles.length === 0 && (
+            <div className="flex flex-col items-center justify-center">
+              <Placeholder />
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+      {/* )} */}
 
       {!user.isSignedIn && (
         <div className="flex flex-col h-full items-center justify-center gap-4">
