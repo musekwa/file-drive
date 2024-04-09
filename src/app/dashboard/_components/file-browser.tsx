@@ -3,11 +3,7 @@ import { SignInButton, useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 
 import Image from "next/image";
-import {
-  GridIcon,
-  Loader2,
-  Rows3Icon,
-} from "lucide-react";
+import { GridIcon, Loader2, Rows3Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { useState } from "react";
@@ -28,7 +24,6 @@ import {
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { Label } from "@/components/ui/label";
 import Placeholder from "./placeholder";
-
 
 export default function FileBrowser({
   title,
@@ -83,7 +78,7 @@ export default function FileBrowser({
       </div>
       <Placeholder />
 
-      {files && files.length === 0 ? (
+      {/* {files && files.length === 0 ? (
         <Placeholder />
       ) : (
         <Tabs defaultValue="grid">
@@ -122,29 +117,32 @@ export default function FileBrowser({
             </div>
           </div>
 
-          {/* {isLoading && (
+          {isLoading && (
             <div className="flex flex-col items-center justify-center">
               <Loader2 className="mx-auto h-24 w-24 animate-spin" />
               <div className="text-xl text-center text-gray-500">
                 Loading...
               </div>
             </div>
-          )} */}
+          )}
           <TabsContent value="grid">
             <div className="grid grid-cols-3 gap-4 my-4">
-              {files?.map((file) => (
-                // <FileCard key={file._id} file={file} />
-                <div className="w-full">
-                  <h1>{file.name}</h1>
-                  </div>
-              ))}
+              {files?.map((file) => <FileCard key={file._id} file={file} />)}
             </div>
           </TabsContent>
           <TabsContent value="table">
-            {/* <DataTable columns={columns} data={files ?? []} /> */}
+            <DataTable columns={columns} data={files ?? []} />
           </TabsContent>
         </Tabs>
-      )}
+      )} */}
+
+      <div className="grid grid-cols-3 gap-4 my-4">
+        {files?.map((file) => (
+          <div className="w-full">
+            <h1>{file.name}</h1>
+          </div>
+        ))}
+      </div>
 
       {!user.isSignedIn && (
         <div className="flex flex-col h-full items-center justify-center gap-4">
