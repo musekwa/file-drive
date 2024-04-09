@@ -46,18 +46,18 @@ export default function FileBrowser({
   //   api.files.getAllFavorites,
   //   orgId ? { orgId } : "skip"
   // );
-  const files = useQuery(
-    api.files.getFiles,
-    orgId
-      ? {
-          orgId,
-          query,
-          favorites: favoritesOnly,
-          deleteOnly,
-          type: type === "all" ? undefined : type,
-        }
-      : "skip"
-  );
+  // const files = useQuery(
+  //   api.files.getFiles,
+  //   orgId
+  //     ? {
+  //         orgId,
+  //         query,
+  //         favorites: favoritesOnly,
+  //         deleteOnly,
+  //         type: type === "all" ? undefined : type,
+  //       }
+  //     : "skip"
+  // );
   // const isLoading = files === undefined && user.isSignedIn;
 
   // const modifiedFiles = files?.map((file) => ({
@@ -136,13 +136,6 @@ export default function FileBrowser({
         </Tabs>
       )} */}
 
-      <div className="grid grid-cols-3 gap-4 my-4">
-        {files?.map((file) => (
-          <div className="w-full">
-            <h1>{file.name}</h1>
-          </div>
-        ))}
-      </div>
 
       {!user.isSignedIn && (
         <div className="flex flex-col h-full items-center justify-center gap-4">
