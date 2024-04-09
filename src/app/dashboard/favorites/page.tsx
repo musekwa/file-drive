@@ -5,7 +5,7 @@ const FavoritesPage = () => {
 
   return (
     <div className="min-h-screen">
-      <FileBrowser title="Favorites" favoritesOnly />
+      {/* <FileBrowser title="Favorites" favoritesOnly /> */}
     </div>
   );
 };
