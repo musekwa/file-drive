@@ -38,13 +38,13 @@ export const columns: ColumnDef<Doc<"files"> & {
     accessorKey: "type",
     header: "Type",
   },
-  {
-    accessorKey: "user",
-    header: "User",
-    cell: ({ row }) => {
-      return <UserCell userId={row.original.userId} />;
-    },
-  },
+  // {
+  //   accessorKey: "user",
+  //   header: "User",
+  //   cell: ({ row }) => {
+  //     return <UserCell userId={row.original.userId} />;
+  //   },
+  // },
   {
     accessorKey: "uploadedOn",
     header: "Uploaded On",
@@ -56,20 +56,20 @@ export const columns: ColumnDef<Doc<"files"> & {
       );
     },
   },
-  {
-    accessorKey: "action",
-    header: "Action",
-    cell: ({ row }) => {
-      const fileUrl = useQuery(api.files.getFileUrl, {
-        fileId: row.original.fileId,
-      });
-      return (
-        <FileAction 
-          file={row.original}
-          fileUrl={fileUrl || ""}
-          isFavorited={row.original.isFavorited}
-        />
-      );
-    },
-  }
+  // {
+  //   accessorKey: "action",
+  //   header: "Action",
+  //   cell: ({ row }) => {
+  //     const fileUrl = useQuery(api.files.getFileUrl, {
+  //       fileId: row.original.fileId,
+  //     });
+  //     return (
+  //       <FileAction 
+  //         file={row.original}
+  //         fileUrl={fileUrl || ""}
+  //         isFavorited={row.original.isFavorited}
+  //       />
+  //     );
+  //   },
+  // }
 ];
