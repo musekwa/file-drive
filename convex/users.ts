@@ -129,3 +129,12 @@ export const getMe = query({
     return user;
   },
 });
+
+export const getUsers = query({
+  args: {},
+  async handler(ctx) {
+    return await ctx.db
+      .query("users")
+      .collect();
+  },
+});

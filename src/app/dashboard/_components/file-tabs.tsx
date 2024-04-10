@@ -26,38 +26,39 @@ import { Label } from "@/components/ui/label";
 import Placeholder from "./placeholder";
 
 const FileTabs = ({}: {}) => {
-  const organization = useOrganization();
+//   const organization = useOrganization();
   const user = useUser();
-  const [query, setQuery] = useState("");
+//   const [query, setQuery] = useState("");
   const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
-  let orgId: string | undefined;
-  if (organization.isLoaded && user.isLoaded) {
-    orgId = organization.organization?.id ?? user.user?.id;
-  }
-  const favorites = useQuery(
-    api.files.getAllFavorites,
-    orgId ? { orgId } : "skip"
-  );
-  const files = useQuery(
-    api.files.getFiles,
-    orgId
-      ? {
-          orgId,
-          query,
-          favorites: false,
-          deleteOnly: false,
-          type: type === "all" ? undefined : type,
-        }
-      : "skip"
-  );
-  const isLoading = files === undefined && user.isSignedIn;
+//   let orgId: string | undefined;
+//   if (organization.isLoaded && user.isLoaded) {
+//     orgId = organization.organization?.id ?? user.user?.id;
+//   }
+//   const favorites = useQuery(
+//     api.files.getAllFavorites,
+//     orgId ? { orgId } : "skip"
+//   );
+//   const files = useQuery(
+//     api.files.getFiles,
+//     orgId
+//       ? {
+//           orgId,
+//           query,
+//           favorites: false,
+//           deleteOnly: false,
+//           type: type === "all" ? undefined : type,
+//         }
+//       : "skip"
+//   );
+const users = useQuery(api.users.getUsers, "skip");
+  const isLoading = users === undefined && user.isSignedIn;
 
-  const modifiedFiles = files?.map((file) => ({
-    ...file,
-    isFavorited: (favorites ?? []).some(
-      (favorite) => favorite.fileId === file._id
-    ),
-  }));
+//   const modifiedFiles = files?.map((file) => ({
+//     ...file,
+//     isFavorited: (favorites ?? []).some(
+//       (favorite) => favorite.fileId === file._id
+//     ),
+//   }));
 
   return (
     <Tabs defaultValue="grid">
@@ -103,6 +104,17 @@ const FileTabs = ({}: {}) => {
         </div>
       )}
       <TabsContent value="grid">
+        {
+            users && users.length > 0 && (
+              <div className="grid grid-cols-3 gap-4 my-4">
+                {users?.map((user) => (
+                 <div>
+                    {user.name}
+                 </div>
+                ))}
+              </div>
+            )
+        }
         {/* {modifiedFiles && modifiedFiles.length > 0 && (
           <div className="grid grid-cols-3 gap-4 my-4">
             {modifiedFiles?.map((file) => (
@@ -110,21 +122,21 @@ const FileTabs = ({}: {}) => {
             ))}
           </div>
         )} */}
-        {modifiedFiles && modifiedFiles.length === 0 && (
+        {/* {modifiedFiles && modifiedFiles.length === 0 && (
           <div className="flex flex-col items-center justify-center">
             <Placeholder />
           </div>
-        )}
+        )} */}
       </TabsContent>
       <TabsContent value="table">
         {/* {modifiedFiles && modifiedFiles.length > 0 && (
           <DataTable columns={columns} data={modifiedFiles ?? []} />
         )} */}
-        {modifiedFiles && modifiedFiles.length === 0 && (
+        {/* {modifiedFiles && modifiedFiles.length === 0 && (
           <div className="flex flex-col items-center justify-center">
             <Placeholder />
           </div>
-        )}
+        )} */}
       </TabsContent>
     </Tabs>
   );
