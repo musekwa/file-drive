@@ -50,8 +50,10 @@ const FileTabs = ({}: {}) => {
 //         }
 //       : "skip"
 //   );
-const users = useQuery(api.users.getUsers, "skip");
+const users = useQuery(api.users.getUsers);
   const isLoading = users === undefined && user.isSignedIn;
+
+  console.log("users", users)
 
 //   const modifiedFiles = files?.map((file) => ({
 //     ...file,
