@@ -5,11 +5,13 @@ import { FileIcon, Folder, FolderOpen, Library, StarIcon, Trash2 } from "lucide-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import { UploadButton } from "./_components/upload-button";
 
 const SideNav = () => {
   const pathname = usePathname();
   return (
-    <div className="max-w-40 flex flex-col justify-start gap-2 ">
+    <div className="max-w-40 flex flex-col gap-2 ">
+      
       <Link href={"/dashboard/files"}>
         <Button variant={"link"} className={clsx("flex gap-2", {
           " text-sky-600/90 underline": pathname === "/dashboard/files",

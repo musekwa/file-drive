@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useOrganization, useUser } from "@clerk/nextjs";
+import { SignedIn, useOrganization, useUser } from "@clerk/nextjs";
 import {
   Form,
   FormControl,
@@ -19,20 +19,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, SearchIcon } from "lucide-react";
+import { FolderOpen, Loader2, SearchIcon } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
+import { useSearchParams } from "next/navigation";
+import { UploadButton } from "./upload-button";
+import Link from "next/link";
 
 const formSchema = z.object({
   query: z.string().min(0).max(200),
 });
 
-const SearchBar = ({
-  query,
-  setQuery,
-}: {
-  query: string;
-  setQuery: Dispatch<SetStateAction<string>>;
-}) => {
+const SearchBar = () => {
+  const searchParams = useSearchParams();
+  // const
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,41 +40,52 @@ const SearchBar = ({
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setQuery(values.query);
+    // setQuery(values.query);
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex gap-4  items-center"
-      >
-        <FormField
-          control={form.control}
-          name="query"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input size={32} placeholder="Search files by their names" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+    <div className="flex justify-between items-center">
 
-        <Button
-        size={"sm"}
-          type="submit"
-          disabled={form.formState.isSubmitting}
-          className="flex gap-2 bg-gray-600/90 dark:text-white"
-        >
-          {form.formState.isSubmitting && (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          )}
-          <SearchIcon className="h-6 w-6" /> Search
-        </Button>
-      </form>
-    </Form>
+      <div>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex gap-4  items-center"
+          >
+            <FormField
+              control={form.control}
+              name="query"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      size={32}
+                      placeholder="Search files by their names"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              size={"sm"}
+              type="submit"
+              disabled={form.formState.isSubmitting}
+              className="flex gap-2 bg-gray-600/90 dark:text-white"
+            >
+              {form.formState.isSubmitting && (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              )}
+              <SearchIcon className="h-6 w-6" /> Search
+            </Button>
+          </form>
+        </Form>
+      </div>
+
+      {/* <UploadButton /> */}
+    </div>
   );
 };
 
