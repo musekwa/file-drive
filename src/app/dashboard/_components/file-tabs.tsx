@@ -103,13 +103,13 @@ const FileTabs = ({}: {}) => {
         </div>
       )}
       <TabsContent value="grid">
-        {modifiedFiles && modifiedFiles.length > 0 && (
+        {/* {modifiedFiles && modifiedFiles.length > 0 && (
           <div className="grid grid-cols-3 gap-4 my-4">
             {modifiedFiles?.map((file) => (
               <FileCard key={file._id} file={file} />
             ))}
           </div>
-        )}
+        )} */}
         {modifiedFiles && modifiedFiles.length === 0 && (
           <div className="flex flex-col items-center justify-center">
             <Placeholder />
@@ -117,9 +117,9 @@ const FileTabs = ({}: {}) => {
         )}
       </TabsContent>
       <TabsContent value="table">
-        {modifiedFiles && modifiedFiles.length > 0 && (
+        {/* {modifiedFiles && modifiedFiles.length > 0 && (
           <DataTable columns={columns} data={modifiedFiles ?? []} />
-        )}
+        )} */}
         {modifiedFiles && modifiedFiles.length === 0 && (
           <div className="flex flex-col items-center justify-center">
             <Placeholder />
