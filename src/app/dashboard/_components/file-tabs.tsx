@@ -1,13 +1,10 @@
 "use client";
-import {
-  useOrganization,
-  useUser,
-} from "@clerk/nextjs";
+import { useOrganization, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 
 import { GridIcon, Loader2, Rows3Icon } from "lucide-react";
 
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { api } from "../../../../convex/_generated/api";
 import FileCard from "../_components/file-card";
@@ -24,12 +21,29 @@ import {
 import { Doc } from "../../../../convex/_generated/dataModel";
 import { Label } from "@/components/ui/label";
 import Placeholder from "./placeholder";
+import SearchBar from "./search-bar";
 
-const FileTabs = ({}: {}) => {
+const FileTabs = ({
+  query,
+  setQuery,
+  type,
+  setType,
+  favoritesOnly,
+  deleteOnly,
+  title,
+}: {
+  query: string;
+  setQuery: Dispatch<SetStateAction<string>>;
+  type: Doc<"files">["type"] | "all";
+  setType: Dispatch<SetStateAction<Doc<"files">["type"] | "all">>;
+  favoritesOnly?: boolean;
+  deleteOnly?: boolean;
+  title: string;
+}) => {
   const organization = useOrganization();
   const user = useUser();
-  const [query, setQuery] = useState("");
-  const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
+  // const [query, setQuery] = useState("");
+  // const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
   let orgId: string | undefined;
   if (organization.isLoaded && user.isLoaded) {
     orgId = organization.organization?.id ?? user.user?.id;
@@ -44,8 +58,8 @@ const FileTabs = ({}: {}) => {
       ? {
           orgId,
           query,
-          favorites: false,
-          deleteOnly: false,
+          favorites: favoritesOnly,
+          deleteOnly: deleteOnly,
           type: type === "all" ? undefined : type,
         }
       : "skip"
@@ -60,73 +74,77 @@ const FileTabs = ({}: {}) => {
   }));
 
   return (
-    <Tabs defaultValue="grid">
-      <div className="flex justify-between items-center">
-        <div>
-          <TabsList className="mb-4">
-            <TabsTrigger value="grid" className="flex gap-2 items-center">
-              <GridIcon className="w-6 h-6" />
-              Grid
-            </TabsTrigger>
-            <TabsTrigger value="table" className="flex gap-2 items-center">
-              <Rows3Icon className="w-6 h-6" />
-              Table
-            </TabsTrigger>
-          </TabsList>
+    <div>
+      
+      <Tabs defaultValue="grid">
+        <div className="flex justify-between items-center">
+          <div className="flex gap-2 items-center">
+            <TabsList className="">
+              <TabsTrigger value="grid" className="flex gap-2 items-center">
+                <GridIcon className="w-6 h-6" />
+                Grid
+              </TabsTrigger>
+              <TabsTrigger value="table" className="flex gap-2 items-center">
+                <Rows3Icon className="w-6 h-6" />
+                Table
+              </TabsTrigger>
+            </TabsList>
+            <SearchBar setQuery={setQuery} />
+          </div>
+          <div className="flex gap-2 items-center">
+            <Label htmlFor="type-select">Type Filter</Label>
+            <Select
+              value={type}
+              onValueChange={(newvalue: any) => {
+                setType(newvalue);
+              }}
+              name="type-select"
+            >
+              <SelectTrigger className="w-[180px]" defaultValue="all">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="image">Image</SelectItem>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="flex gap-2 items-center">
-          <Label htmlFor="type-select">Type Filter</Label>
-          <Select
-            value={type}
-            onValueChange={(newvalue: any) => {
-              setType(newvalue);
-            }}
-            name="type-select"
-          >
-            <SelectTrigger className="w-[180px]" defaultValue="all">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="image">Image</SelectItem>
-              <SelectItem value="csv">CSV</SelectItem>
-              <SelectItem value="pdf">PDF</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
 
-      {isLoading && (
-        <div className="flex flex-col items-center justify-center">
-          <Loader2 className="mx-auto h-24 w-24 animate-spin" />
-          <div className="text-xl text-center text-gray-500">Loading...</div>
-        </div>
-      )}
-      <TabsContent value="grid">
-        {modifiedFiles && modifiedFiles.length > 0 && (
-          <div className="grid grid-cols-3 gap-4 my-4">
-            {modifiedFiles?.map((file) => (
-              <FileCard key={file._id} file={file} />
-            ))}
+        {isLoading && (
+          <div className="flex flex-col items-center justify-center h-screen">
+            <Loader2 className="mx-auto h-24 w-24 animate-spin" />
+            <div className="text-xl text-center text-gray-500">Loading...</div>
           </div>
         )}
-        {modifiedFiles && modifiedFiles.length === 0 && (
-          <div className="flex flex-col items-center justify-center">
-            <Placeholder />
-          </div>
-        )}
-      </TabsContent>
-      <TabsContent value="table">
-        {modifiedFiles && modifiedFiles.length > 0 && (
-          <DataTable columns={columns} data={modifiedFiles ?? []} />
-        )}
-        {modifiedFiles && modifiedFiles.length === 0 && (
-          <div className="flex flex-col items-center justify-center">
-            <Placeholder />
-          </div>
-        )}
-      </TabsContent>
-    </Tabs>
+        <TabsContent value="grid">
+          {modifiedFiles && modifiedFiles.length > 0 && (
+            <div className="grid grid-cols-3 gap-4 my-4">
+              {modifiedFiles?.map((file) => (
+                <FileCard key={file._id} file={file} />
+              ))}
+            </div>
+          )}
+          {modifiedFiles && modifiedFiles.length === 0 && (
+            <div className="flex flex-col items-center justify-center">
+              <Placeholder />
+            </div>
+          )}
+        </TabsContent>
+        <TabsContent value="table">
+          {modifiedFiles && modifiedFiles.length > 0 && (
+            <DataTable columns={columns} data={modifiedFiles ?? []} />
+          )}
+          {modifiedFiles && modifiedFiles.length === 0 && (
+            <div className="flex flex-col items-center justify-center">
+              <Placeholder />
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 

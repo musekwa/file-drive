@@ -29,9 +29,12 @@ const formSchema = z.object({
   query: z.string().min(0).max(200),
 });
 
-const SearchBar = () => {
-  const searchParams = useSearchParams();
-  // const
+const SearchBar = ({
+  setQuery
+}: {
+  setQuery: Dispatch<SetStateAction<string>>
+}) => {
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -40,7 +43,7 @@ const SearchBar = () => {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // setQuery(values.query);
+    setQuery(values.query);
   }
 
   return (
@@ -59,7 +62,7 @@ const SearchBar = () => {
                 <FormItem>
                   <FormControl>
                     <Input
-                      size={32}
+                      size={35}
                       placeholder="Search files by their names"
                       {...field}
                     />

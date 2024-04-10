@@ -8,7 +8,7 @@ export default function FilesPage() {
 
   return (
     <div className="min-h-screen">
-      <FileBrowser  />
+      <FileBrowser title="All Files"  />
     </div>
   );
 }

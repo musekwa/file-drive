@@ -34,22 +34,22 @@ import Fallback from "./fallback";
 
 
 export default function FileBrowser({
-  // title,
-  // favoritesOnly,
-  // deleteOnly,
+  title,
+  favoritesOnly,
+  deleteOnly,
 }: {
-  // title: string;
-  // favoritesOnly?: boolean;
-  // deleteOnly?: boolean;
+  title: string;
+  favoritesOnly?: boolean;
+  deleteOnly?: boolean;
 }) {
-  const organization = useOrganization();
+  // const organization = useOrganization();
   const user = useUser();
-  // const [query, setQuery] = useState("");
-  // const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
-  let orgId: string | undefined;
-  if (organization.isLoaded && user.isLoaded) {
-    orgId = organization.organization?.id ?? user.user?.id;
-  }
+  const [query, setQuery] = useState("");
+  const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
+  // let orgId: string | undefined;
+  // if (organization.isLoaded && user.isLoaded) {
+  //   orgId = organization.organization?.id ?? user.user?.id;
+  // }
   // const favorites = useQuery(
   //   api.files.getAllFavorites,
   //   orgId ? { orgId } : "skip"
@@ -60,13 +60,20 @@ export default function FileBrowser({
   //     ? {
   //         orgId,
   //         query,
-  //         favorites: favoritesOnly,
-  //         deleteOnly,
+  //         favorites: false,
+  //         deleteOnly: false,
   //         type: type === "all" ? undefined : type,
   //       }
   //     : "skip"
   // );
   // const isLoading = files === undefined && user.isSignedIn;
+
+  // const modifiedFiles = files?.map((file) => ({
+  //   ...file,
+  //   isFavorited: (favorites ?? []).some(
+  //     (favorite) => favorite.fileId === file._id
+  //   ),
+  // }));
 
 
 
@@ -74,12 +81,20 @@ export default function FileBrowser({
     <div className="">
 
       <Suspense fallback={<Fallback />}>
-        <FileTabs />
+        <FileTabs
+          title={title}
+          favoritesOnly={favoritesOnly}
+          deleteOnly={deleteOnly}
+          query={query}
+          setQuery={setQuery}
+          type={type}
+          setType={setType}
+        />
       </Suspense>
 
 
       {!user.isSignedIn && (
-        <div className="flex flex-col h-full items-center justify-center gap-4">
+        <div className="flex flex-col h-screen items-center justify-center gap-4">
           <Image
             alt="Empty folder picture"
             src="/signin.svg"
