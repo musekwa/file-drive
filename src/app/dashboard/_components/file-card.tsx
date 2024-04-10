@@ -7,22 +7,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-
 import { Doc, Id } from "../../../../convex/_generated/dataModel";
-import {
-  FileText,
-  GanttChartIcon,
-  ImageIcon,
-  StarIcon,
-} from "lucide-react";
+import { FileText, GanttChartIcon, ImageIcon, StarIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {  formatRelative, } from "date-fns";
+import { formatRelative } from "date-fns";
 
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import Image from "next/image";
 import FileAction from "./file-actions";
-
 
 const FileCard = ({
   file,
@@ -49,47 +42,72 @@ const FileCard = ({
   }
 
   return (
-    <Card className="relative hover:scale-105 transition-all duration-300">
-      <CardHeader className="pt-1">
-        <CardTitle className="flex gap-2 text-base font-normal items-center">
-          {typeIcons[file.type]} {file.name}{" "}
-          {file.isFavorited && (
-            <StarIcon fill="yellow" className="h-4 w-4  text-yellow-500" />
-          )}
-        </CardTitle>
-        <div className="absolute right-2 top-0">
-          <FileAction
-            fileUrl={fileUrl as string}
-            isFavorited={file.isFavorited}
-            file={file}
-          />
-        </div>
-      </CardHeader>
-      <CardContent className="flex justify-center items-center h-[200px]">
+    <div className="p-1 shadow-md rounded-md relative hover:scale-105 transition-all duration-300 h-[200px] w-[200px] m-4 border">
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2">
         {file.type === "image" && (
           <Image
             alt={file.name}
             src={fileUrl as string}
             width={200}
             height={200}
+            className="object-contain"
           />
         )}
-        {file.type === "pdf" && <FileText className="h-24 w-24" />}
-        {file.type === "csv" && <GanttChartIcon className="h-24 w-24" />}
-      </CardContent>
-      <CardFooter className="flex justify-between gap-2 items-end text-[10px] text-gray-600 bg-gray-100 pt-1 pb-1">
-        <div className="flex gap-2 items-end">
-          <Avatar className="w-6 h-6 ">
-            <AvatarImage src={userProfile?.image} />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          {userProfile?.name}
+        {file.type === "pdf" && (
+          <Image
+            alt={file.name}
+            src={"/pdfLogo.svg"}
+            width={200}
+            height={200}
+            className="object-contain"
+          />
+        )}
+        {file.type === "csv" && (
+          <Image
+            alt={file.name}
+            src={"/csvLogo.svg"}
+            width={200}
+            height={200}
+            className="object-contain"
+          />
+        )}
+      </div>
+
+      <div className="flex justify-between items-center">
+        <div className="flex gap-2 items-center">
+          {typeIcons[file.type]}
+
+          {file.isFavorited && (
+            <StarIcon fill="yellow" className="h-4 w-4  text-yellow-500" />
+          )}
         </div>
+        <FileAction
+          fileUrl={fileUrl as string}
+          isFavorited={file.isFavorited}
+          file={file}
+        />
+      </div>
+
+      <div className="absolute bottom-1 left-2  right-2">
+        <p className="text-base font-mono text-center leading-4 ">
+          {file.name}
+        </p>
         <div>
-          Uploaded on {formatRelative(new Date(file._creationTime), new Date())}
+          <div className="flex gap-2 justify-between items-end text-gray-600 text-[10px] ">
+            <div className="flex gap-2 items-center">
+              <Avatar className="w-4 h-4 ">
+                <AvatarImage src={userProfile?.image} />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              {userProfile?.name?.split(" ")[0]}
+            </div>
+            <p className="text-[10px] text-right">
+              {formatRelative(new Date(file._creationTime), new Date())}
+            </p>
+          </div>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 };
 

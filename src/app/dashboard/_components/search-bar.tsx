@@ -30,11 +30,10 @@ const formSchema = z.object({
 });
 
 const SearchBar = ({
-  setQuery
+  setQuery,
 }: {
-  setQuery: Dispatch<SetStateAction<string>>
+  setQuery: Dispatch<SetStateAction<string>>;
 }) => {
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,48 +46,42 @@ const SearchBar = ({
   }
 
   return (
-    <div className="flex justify-between items-center">
 
-      <div>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex gap-4  items-center"
-          >
-            <FormField
-              control={form.control}
-              name="query"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      size={35}
-                      placeholder="Search files by their names"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="relative items-center w-full"
+        >
+          <FormField
+            control={form.control}
+            name="query"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    size={35}
+                    placeholder="Search files by their names"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="absolute top-1/2 right-0 -translate-y-1/2">
             <Button
-              size={"sm"}
+              // size={"sm"}
               type="submit"
               disabled={form.formState.isSubmitting}
-              className="flex gap-2 bg-gray-600/90 dark:text-white"
+              className="w-fit dark:text-white bg-transparent hover:bg-transparent hover:scale-90 transition-all duration-300 "
             >
-              {form.formState.isSubmitting && (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              )}
-              <SearchIcon className="h-6 w-6" /> Search
-            </Button>
-          </form>
-        </Form>
-      </div>
 
-      {/* <UploadButton /> */}
-    </div>
+              <SearchIcon className="h-6 w-6 text-gray-500 hover:text-sky-600" />
+            </Button>
+          </div>
+        </form>
+      </Form>
+
   );
 };
 

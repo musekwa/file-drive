@@ -42,40 +42,10 @@ export default function FileBrowser({
   favoritesOnly?: boolean;
   deleteOnly?: boolean;
 }) {
-  // const organization = useOrganization();
+
   const user = useUser();
   const [query, setQuery] = useState("");
   const [type, setType] = useState<Doc<"files">["type"] | "all">("all");
-  // let orgId: string | undefined;
-  // if (organization.isLoaded && user.isLoaded) {
-  //   orgId = organization.organization?.id ?? user.user?.id;
-  // }
-  // const favorites = useQuery(
-  //   api.files.getAllFavorites,
-  //   orgId ? { orgId } : "skip"
-  // );
-  // const files = useQuery(
-  //   api.files.getFiles,
-  //   orgId
-  //     ? {
-  //         orgId,
-  //         query,
-  //         favorites: false,
-  //         deleteOnly: false,
-  //         type: type === "all" ? undefined : type,
-  //       }
-  //     : "skip"
-  // );
-  // const isLoading = files === undefined && user.isSignedIn;
-
-  // const modifiedFiles = files?.map((file) => ({
-  //   ...file,
-  //   isFavorited: (favorites ?? []).some(
-  //     (favorite) => favorite.fileId === file._id
-  //   ),
-  // }));
-
-
 
   return (
     <div className="">

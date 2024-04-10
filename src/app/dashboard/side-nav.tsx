@@ -10,7 +10,7 @@ import { UploadButton } from "./_components/upload-button";
 const SideNav = () => {
   const pathname = usePathname();
   return (
-    <div className="max-w-40 flex flex-col gap-2 ">
+    <div className="max-w-40 gap-2 hidden lg:block">
       
       <Link href={"/dashboard/files"}>
         <Button variant={"link"} className={clsx("flex gap-2", {

@@ -28,7 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, UploadCloud, UploadIcon } from "lucide-react";
+import { FileWarning, Loader2, UploadCloud, UploadIcon } from "lucide-react";
 import { Doc } from "../../../../convex/_generated/dataModel";
 
 const formSchema = z.object({
@@ -59,7 +59,7 @@ export function UploadButton() {
 
     const postUrl = await generateUploadUrl();
 
-    const fileType = values.file[0].type;    
+    const fileType = values.file[0].type;
 
     const result = await fetch(postUrl, {
       method: "POST",
@@ -72,7 +72,6 @@ export function UploadButton() {
       "image/png": "image",
       "application/pdf": "pdf",
       "text/csv": "csv",
-      
     } as Record<string, Doc<"files">["type"]>;
 
     try {
@@ -121,13 +120,23 @@ export function UploadButton() {
       <DialogTrigger asChild>
         <Button className="flex gap-2 bg-sky-600/90 dark:text-white">
           <UploadCloud className="h-6 w-6" />
-          Upload File</Button>
+          Upload File
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-8">Upload your File Here</DialogTitle>
           <DialogDescription>
-            This file will be accessible by anyone in your organization
+            <div className="flex gap-4 items-center bg-yellow-200 dark:bg-slate-800 text-black dark:text-gray-400  p-2 ">
+              <FileWarning className="h-6 w-6" />
+              <p>
+                We currently support the upload of the following file types:
+                PDF, CSV, and PNG Image
+              </p>
+            </div>
+            <div className="p-2">
+              <p className="text-[14px]">The file you upload will be accessible by anyone in your organization</p>
+            </div>
           </DialogDescription>
         </DialogHeader>
 
@@ -139,7 +148,7 @@ export function UploadButton() {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Title</FormLabel>
+                    <FormLabel>Name of the file</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -153,9 +162,9 @@ export function UploadButton() {
                 name="file"
                 render={() => (
                   <FormItem>
-                    <FormLabel>File</FormLabel>
+                    <FormLabel >Choose the file</FormLabel>
                     <FormControl>
-                      <Input type="file" {...fileRef} />
+                      <Input className="text-gray-600 cursor-pointer" type="file" {...fileRef} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -164,7 +173,7 @@ export function UploadButton() {
               <Button
                 type="submit"
                 disabled={form.formState.isSubmitting}
-                className="flex gap-1"
+                className="flex gap-1 bg-sky-600"
               >
                 {form.formState.isSubmitting && (
                   <Loader2 className="h-4 w-4 animate-spin" />

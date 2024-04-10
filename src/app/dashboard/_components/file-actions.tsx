@@ -91,7 +91,7 @@ const FileAction = ({
 
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <MoreVertical />
+          <MoreVertical className="h-5 w-5 text-sky-600" />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuItem
