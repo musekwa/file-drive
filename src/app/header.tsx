@@ -44,7 +44,7 @@ const Header = () => {
           </div>
 
           <SignedIn>
-            {pathname === "/" ? (
+            {!pathname.includes("/dashboard") ? (
               <Link href={"/dashboard/files"} className="">
                 <Button
                   variant={"default"}

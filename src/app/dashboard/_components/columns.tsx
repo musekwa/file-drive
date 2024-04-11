@@ -8,6 +8,7 @@ import { api } from "../../../../convex/_generated/api";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import FileAction from "./file-actions";
 import { StarIcon } from "lucide-react";
+import clsx from "clsx";
 
 function UserCell({ userId }: { userId: Id<"users"> }) {
   const userProfile = useQuery(api.users.getUserProfile, {
@@ -19,19 +20,47 @@ function UserCell({ userId }: { userId: Id<"users"> }) {
         <AvatarImage src={userProfile?.image} />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
+      <p className={clsx(
+            'truncate',
+            'max-w-[200px]',
+            'overflow-hidden',
+            'whitespace-nowrap',
+            'text-ellipsis'
+          )}>
       {userProfile?.name}
+
+      </p>
     </div>
   );
 }
 
-export const columns: ColumnDef<Doc<"files"> & {
-  isFavorited: boolean;
-}>[] = [
+export const columns: ColumnDef<
+  Doc<"files"> & {
+    isFavorited: boolean;
+  }
+>[] = [
   {
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {
-      return <div className="flex gap-2">{row.original.name} {row.original.isFavorited ? <StarIcon fill="yellow" className="h-4 w-4 text-yellow-500" /> : null}</div>;
+      return (
+        <div className="flex gap-2 max-w-[200px]">
+          <p 
+
+          className={clsx(
+            'truncate',
+            'max-w-[200px]',
+            'overflow-hidden',
+            'whitespace-nowrap',
+            'text-ellipsis'
+          )}>{row.original.name}</p>
+          <p>
+            {row.original.isFavorited ? (
+              <StarIcon fill="yellow" className="h-4 w-4 text-yellow-500" />
+            ) : null}
+          </p>
+        </div>
+      );
     },
   },
   {
@@ -64,12 +93,12 @@ export const columns: ColumnDef<Doc<"files"> & {
         fileId: row.original.fileId,
       });
       return (
-        <FileAction 
+        <FileAction
           file={row.original}
           fileUrl={fileUrl || ""}
           isFavorited={row.original.isFavorited}
         />
       );
     },
-  }
+  },
 ];

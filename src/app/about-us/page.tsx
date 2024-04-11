@@ -1,5 +1,6 @@
 import { LocateIcon, Mail, MapIcon, MapPin, Phone } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 function AboutUsPage() {
@@ -50,13 +51,16 @@ function AboutUsPage() {
           </div>
           <div className="flex gap-4 items-center justify-end">
             <Mail className="w-6 h-6" />
-            <div>
+            <div className="space-y-2">
               <p>musekwa@tecmoza.com</p>
+              <Link href={"https://www.tecmoza.com/en/contact-us"} className="hover:text-sky-800 cursor-pointer" target="_blank" rel="noopener noreferrer">
+                www.tecmoza.com
+              </Link>
             </div>
           </div>
           <div className="flex gap-4 items-center justify-end">
             <MapPin className="w-6 h-6" />
-            <div>
+            <div className="space-y-2">
               <p>Av. 25 de Setembro, Nr. 412,</p>
               <p>Maputo, Moçambique</p>
             </div>
