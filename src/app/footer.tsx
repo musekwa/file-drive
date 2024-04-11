@@ -11,21 +11,21 @@ const Footer = () => {
         </h1>
         <Link
           className="text-sky-600/90 hover:text-sky-800 cursor-pointer"
-          href={"/privacy"}
+          href={"#"}
         >
           Privacy Policy
         </Link>
         <Link
           className="text-sky-600/90 hover:text-sky-800 cursor-pointer"
-          href={"/terms-of-service"}
+          href={"#"}
         >
-          Privacy Policy
+          Terms of Service
         </Link>
         <Link
           className="text-sky-600/90 hover:text-sky-800 cursor-pointer"
-          href={"/about"}
+          href={"/about-us"}
         >
-          Privacy Policy
+          About Us
         </Link>
       </div>
     </div>

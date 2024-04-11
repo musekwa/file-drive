@@ -59,7 +59,10 @@ const FileTabs = ({
           query,
           favorites: favoritesOnly || type === "favorites",
           deleteOnly: deleteOnly || type === "trash",
-          type: (type === "favorites" || type === "trash" || type === "all" ) ? undefined : type,
+          type:
+            type === "favorites" || type === "trash" || type === "all"
+              ? undefined
+              : type,
         }
       : "skip"
   );
@@ -125,10 +128,13 @@ const FileTabs = ({
                   <SelectItem value="image">Images Only </SelectItem>
                   <SelectItem value="csv">CSVs Only</SelectItem>
                   <SelectItem value="pdf">PDFs Only</SelectItem>
-                 
-                    <SelectItem value="favorites" className="lg:hidden">Favorites Only</SelectItem>
-                    <SelectItem value="trash" className="lg:hidden">Deleted Only</SelectItem>
-              
+
+                  <SelectItem value="favorites" className="lg:hidden">
+                    Favorites Only
+                  </SelectItem>
+                  <SelectItem value="trash" className="lg:hidden">
+                    Deleted Only
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
