@@ -13,17 +13,13 @@ import Link from "next/link";
 import React, { Suspense } from "react";
 import { ModeToggle } from "./mode-toggle";
 import { FolderOpen, LayoutDashboard } from "lucide-react";
-import { useQuery } from "convex/react";
-import { api } from "../../convex/_generated/api";
-import TopBar from "./dashboard/_components/search-bar";
-import { UploadButton } from "./dashboard/_components/upload-button";
-import clsx from "clsx";
+import { UploadButton } from "../../app/dashboard/_components/upload-button";
 import { usePathname } from "next/navigation";
 
 const Header = () => {
   const pathname = usePathname();
   return (
-    <div className="sticky top-0 right-0 left-0 z-50 border-b py-4 bg-gray-100 dark:bg-slate-900">
+    <div className="sticky top-0 z-50 border-b py-4 bg-gray-100 dark:bg-slate-900">
       <div className="px-4 md:px-6 lg:px-20 mx-auto">
         <div className="flex items-center justify-between">
           <div className="flex gap-8 items-center">
