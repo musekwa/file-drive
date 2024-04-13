@@ -5,9 +5,10 @@ import React from "react";
 
 function AboutUsPage() {
   return (
-    <div className="flex gap-2 flex-col md:flex-row">
-      <div className="px-4 md:px-6 lg:px-20 w-full lg:w-1/2 h-screen space-y-4 dark:text-gray-600  pt-24">
-        <h1 className="text-3xl font-bold">Quem Somos?</h1>
+    <div className="flex gap-2 md:flex-row  flex-col  min-h-screen">
+
+      <div className="px-4 md:px-6 lg:px-20 pt-16 w-full md:w-1/2">
+        <h1 className="text-3xl font-bold pb-6">Quem Somos?</h1>
         <div className="text-[17px] space-y-4 leading-relaxed">
           <p className="">
             A <span className="font-bold">Tecmoza</span> é uma empresa de
@@ -32,15 +33,18 @@ function AboutUsPage() {
           </p>
         </div>
       </div>
-      <div className="relative text-right px-4 md:px-6 lg:px-20 w-full lg:w-1/2 h-screen space-y-4 dark:text-gray-600  pt-24 ">
+      <div className="px-4 md:px-6 lg:px-20 pt-16 w-full md:w-1/2">
+        <div className="relative">
+
         <Image 
             src={"/team.svg"}
             alt="drawn team"
             width={400}
             height={400}
-            className="object-contain absolute top-1/3 opacity-40 -z-20"
-        />
-        <h1 className="text-3xl font-bold text-right">Contacte-Nos</h1>
+            className="object-contain absolute top-1/3 opacity-10 -z-20"
+            />
+            </div>
+        <h1 className="text-3xl font-bold text-right pb-6">Contacte-Nos</h1>
         <div className="text-[17px] space-y-4 leading-relaxed">
           <div className="flex gap-4 items-center justify-end">
             <Phone className="w-6 h-6" />
